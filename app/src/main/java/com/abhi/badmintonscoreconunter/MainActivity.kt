@@ -212,12 +212,6 @@ fun SetupScreen(
     onMatchPointsChange: (Int) -> Unit,
     onStartMatch: () -> Unit
 ) {
-    val focusRequester = remember { FocusRequester() }
-    
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -237,9 +231,7 @@ fun SetupScreen(
             value = team1Name,
             onValueChange = onTeam1NameChange,
             label = { Text("Team 1 Name") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester),
+            modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White,
