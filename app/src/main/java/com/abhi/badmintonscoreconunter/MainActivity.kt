@@ -63,6 +63,7 @@ fun BadmintonScoreCounterApp() {
     var currentSetScore2 by remember { mutableIntStateOf(0) }
     val setHistory = remember { mutableStateListOf<SetResult>() }
     var winnerName by remember { mutableStateOf("") }
+    var setWinnerMessage by remember { mutableStateOf<String?>(null) }
 
     val darkBackground = Color(0x0A, 0x0A, 0x1A)
 
@@ -96,7 +97,20 @@ fun BadmintonScoreCounterApp() {
                 team1Sets = team1SetsWon,
                 team2Sets = team2SetsWon,
                 setHistory = setHistory,
+                setWinnerMessage = setWinnerMessage,
+                onDismissSetWinner = {
+                    setWinnerMessage = null
+                    if (team1SetsWon == 2 || team2SetsWon == 2) {
+                        winnerName = if (team1SetsWon == 2) team1Name else team2Name
+                        currentScreen = Screen.Winner
+                    } else {
+                        currentSetScore1 = 0
+                        currentSetScore2 = 0
+                    }
+                },
                 onScoreChange = { t1, t2 ->
+                    if (setWinnerMessage != null) return@ScoreScreen
+                    
                     currentSetScore1 = t1
                     currentSetScore2 = t2
                     
@@ -109,15 +123,9 @@ fun BadmintonScoreCounterApp() {
                     
                     if (isSetOver) {
                         setHistory.add(SetResult(t1, t2))
+                        val setWinner = if (t1 > t2) team1Name else team2Name
                         if (t1 > t2) team1SetsWon++ else team2SetsWon++
-                        
-                        if (team1SetsWon == 2 || team2SetsWon == 2) {
-                            winnerName = if (team1SetsWon == 2) team1Name else team2Name
-                            currentScreen = Screen.Winner
-                        } else {
-                            currentSetScore1 = 0
-                            currentSetScore2 = 0
-                        }
+                        setWinnerMessage = "Set winner is -> $setWinner"
                     }
                 },
                 onReset = {
@@ -300,11 +308,26 @@ fun ScoreScreen(
     team1Sets: Int,
     team2Sets: Int,
     setHistory: List<SetResult>,
+    setWinnerMessage: String?,
+    onDismissSetWinner: () -> Unit,
     onScoreChange: (Int, Int) -> Unit,
     onReset: () -> Unit
 ) {
     var showResetDialog by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
+
+    if (setWinnerMessage != null) {
+        AlertDialog(
+            onDismissRequest = onDismissSetWinner,
+            title = { Text("Set Over!") },
+            text = { Text(setWinnerMessage) },
+            confirmButton = {
+                TextButton(onClick = onDismissSetWinner) {
+                    Text("OK")
+                }
+            }
+        )
+    }
 
     if (showResetDialog) {
         AlertDialog(
