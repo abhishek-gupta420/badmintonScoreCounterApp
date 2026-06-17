@@ -33,10 +33,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 import kotlin.math.abs
 
 enum class Screen {
-    Setup, Score, Winner
+    Splash, Setup, Score, Winner
 }
 
 data class SetResult(val team1Score: Int, val team2Score: Int)
@@ -52,7 +53,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun BadmintonScoreCounterApp() {
-    var currentScreen by remember { mutableStateOf(Screen.Setup) }
+    var currentScreen by remember { mutableStateOf(Screen.Splash) }
     var team1Name by remember { mutableStateOf("") }
     var team2Name by remember { mutableStateOf("") }
     var matchPoints by remember { mutableIntStateOf(21) }
@@ -72,6 +73,7 @@ fun BadmintonScoreCounterApp() {
         color = darkBackground
     ) {
         when (currentScreen) {
+            Screen.Splash -> SplashScreen(onTimeout = { currentScreen = Screen.Setup })
             Screen.Setup -> SetupScreen(
                 team1Name = team1Name,
                 onTeam1NameChange = { team1Name = it },
@@ -140,6 +142,46 @@ fun BadmintonScoreCounterApp() {
                 onNewMatch = {
                     currentScreen = Screen.Setup
                 }
+            )
+        }
+    }
+}
+
+@Composable
+fun SplashScreen(onTimeout: () -> Unit) {
+    LaunchedEffect(Unit) {
+        delay(1000)
+        onTimeout()
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            androidx.compose.foundation.Image(
+                painter = androidx.compose.ui.res.painterResource(id = R.drawable.app_logo),
+                contentDescription = "App Logo",
+                modifier = Modifier
+                    .size(280.dp)
+                    .clip(CircleShape)
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "SMASH",
+                style = MaterialTheme.typography.displayMedium,
+                color = Color.White,
+                fontWeight = FontWeight.Black,
+                letterSpacing = 4.sp
+            )
+            Text(
+                text = "SCORE",
+                style = MaterialTheme.typography.titleMedium,
+                color = Color(0xFF4CAF50),
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 8.sp
             )
         }
     }
