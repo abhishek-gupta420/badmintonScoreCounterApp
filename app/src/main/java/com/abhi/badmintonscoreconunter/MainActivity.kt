@@ -3,6 +3,7 @@ package com.abhi.badmintonscoreconunter
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.abhi.badmintonscoreconunter.R
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
@@ -150,7 +151,7 @@ fun BadmintonScoreCounterApp() {
 @Composable
 fun SplashScreen(onTimeout: () -> Unit) {
     LaunchedEffect(Unit) {
-        delay(1000)
+        delay(2000) // Increased to 2 seconds
         onTimeout()
     }
 
