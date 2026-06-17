@@ -184,6 +184,17 @@ fun SplashScreen(onTimeout: () -> Unit) {
                 letterSpacing = 8.sp
             )
         }
+
+        Text(
+            text = "Developed By Abhishek Gupta",
+            style = MaterialTheme.typography.labelLarge,
+            color = Color.White.copy(alpha = 0.6f),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 48.dp),
+            letterSpacing = 2.sp,
+            fontWeight = FontWeight.Medium
+        )
     }
 }
 
