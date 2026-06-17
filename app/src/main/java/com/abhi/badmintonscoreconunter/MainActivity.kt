@@ -11,6 +11,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -212,6 +214,59 @@ fun SetupScreen(
     onMatchPointsChange: (Int) -> Unit,
     onStartMatch: () -> Unit
 ) {
+    var showInfoDialog by remember { mutableStateOf(false) }
+
+    if (showInfoDialog) {
+        AlertDialog(
+            onDismissRequest = { showInfoDialog = false },
+            containerColor = Color(0xFF1A1A2E),
+            titleContentColor = Color.White,
+            textContentColor = Color.White.copy(alpha = 0.8f),
+            icon = { Text("🏸", fontSize = 40.sp) },
+            title = {
+                Text(
+                    "About Smash Score",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                val scrollState = rememberScrollState()
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(scrollState)
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        "Welcome to Smash Score! This app is designed to help you track badminton matches with professional scoring rules.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("Scoring Rules:", fontWeight = FontWeight.Bold, color = Color(0xFF4CAF50))
+                    Text("• Points: Tap your side to score. Long-press to undo a mistake.")
+                    Text("• Set Winner: First to reach your selected points (11, 15, or 21) wins a set.")
+                    Text("• Deuce: If score is tied (e.g. 20-20), you must win by 2 clear points.")
+                    Text("• Sudden Death: Max score is Target + 9 (e.g. 30 for a 21-point game). First to reach this wins instantly.")
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("Winning Criteria:", fontWeight = FontWeight.Bold, color = Color(0xFF4CAF50))
+                    Text("• Best of 3 Sets: The first team to win 2 sets wins the entire match.")
+                    Text("• Set History: Completed set scores are shown at the top for reference.")
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = { showInfoDialog = false },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Got it!")
+                }
+            },
+            shape = RoundedCornerShape(28.dp)
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -311,6 +366,18 @@ fun SetupScreen(
         ) {
             Text("Start Match", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = "Learn about the app",
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color(0xFF4CAF50),
+            modifier = Modifier
+                .clickable { showInfoDialog = true }
+                .padding(8.dp),
+            textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline
+        )
     }
 }
 
