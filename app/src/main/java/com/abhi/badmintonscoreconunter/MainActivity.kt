@@ -319,13 +319,42 @@ fun ScoreScreen(
     if (setWinnerMessage != null) {
         AlertDialog(
             onDismissRequest = onDismissSetWinner,
-            title = { Text("Set Over!") },
-            text = { Text(setWinnerMessage) },
-            confirmButton = {
-                TextButton(onClick = onDismissSetWinner) {
-                    Text("OK")
+            icon = { Text("🏸", fontSize = 40.sp) },
+            title = {
+                Text(
+                    text = "Set Complete!",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = setWinnerMessage,
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        color = Color(0xFF4CAF50),
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-            }
+            },
+            confirmButton = {
+                Button(
+                    onClick = onDismissSetWinner,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Continue", fontWeight = FontWeight.Bold)
+                }
+            },
+            containerColor = Color(0xFF1A1A2E),
+            titleContentColor = Color.White,
+            textContentColor = Color.White,
+            shape = RoundedCornerShape(28.dp)
         )
     }
 
